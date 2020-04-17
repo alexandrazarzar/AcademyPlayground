@@ -23,6 +23,7 @@ func tocaAsCoisa(som: String){
 }
 
 
+
 class FirstViewController : UIViewController {
 
     override func loadView() {
@@ -30,11 +31,10 @@ class FirstViewController : UIViewController {
         let view = UIView()
         view.backgroundColor = .white
 
-        let label = UILabel()
-        label.frame = CGRect(x: 100, y: 60, width: 200, height: 50)
-        label.font = UIFont(name:"Arial", size: 48.0)
-        label.text = "Melodia"
-        label.textColor = .black
+        let titulo = "Melodia.png"
+        let tituloImage = UIImage(named: titulo)
+        let tituloView = UIImageView(image: tituloImage)
+        tituloView.frame = CGRect(x: -40, y: -25, width: 450, height: 270)
         
         let JogarButtonIm = "imagem_jogar.png"
         let JogarButtonImage = UIImage(named: JogarButtonIm)
@@ -52,17 +52,17 @@ class FirstViewController : UIViewController {
         let notasmusicais = "notasmusicais.png"
         let image2 = UIImage(named: notasmusicais)
         let notasView = UIImageView(image: image2!)
-               notasView.frame = CGRect(x: 0, y: 21, width: 375, height: 219)
+               notasView.frame = CGRect(x: 1, y: 71, width: 375, height: 219)
         
         let piPAULca = "piPAULca_pronto.png"
         let imagePi = UIImage(named: piPAULca)
         let piPAULcaView = UIImageView(image: imagePi!)
-        piPAULcaView.frame = CGRect(x: 29, y: 220, width: 332, height: 365)
+        piPAULcaView.frame = CGRect(x: 29, y: 225, width: 332, height: 365)
         
                 
         view.addSubview(fundoView)
         view.addSubview(notasView)
-        view.addSubview(label)
+        view.addSubview(tituloView)
         view.addSubview(button)
         view.addSubview(piPAULcaView)
         self.view = view
@@ -80,14 +80,17 @@ class FirstViewController : UIViewController {
 
 }
 
-let firstViewController = FirstViewController()
-//--------------------------------------------------------------------------------------------------------------------
+
 
 class SecondViewController: UIViewController {
     var certo = false
     var butaumA =  UIButton(frame: CGRect(x: 31, y: 344, width: 55, height: 55))
     var butaumP =  UIButton(frame: CGRect(x: 31, y: 344, width: 55, height: 55))
     var butaumM =  UIButton(frame: CGRect(x: 31, y: 344, width: 55, height: 55))
+    var player: AVPlayer!
+    var playerLayer: AVPlayerLayer!
+    var videoTempo = UIImageView(frame: CGRect(x: 31, y: 344, width: 55, height: 55))
+
     override func loadView() {
         let view = UIView()
         view.backgroundColor = .white
@@ -108,10 +111,12 @@ class SecondViewController: UIViewController {
         backButton.addTarget(nil, action: #selector(tapBackButton), for: .touchUpInside)
         backButton.setImage(backButtonImage, for: .normal)
         
-        let testeButton = UIButton(frame: CGRect(x: 100, y: 100, width: 100, height: 100))
+        //teste button
+        let play = "play.png"
+        let playButtonImage = UIImage(named: play)
+        let testeButton = UIButton(frame: CGRect(x: 30, y: 262, width: 25, height: 27))
         testeButton.addTarget(nil, action: #selector(tapTestButton), for: .touchUpInside)
-        testeButton.setTitle("play", for: .normal)
-        testeButton.setTitleColor(.black, for: .normal)
+        testeButton.setImage(playButtonImage, for: .normal)
 
         
         let fundo = "fundoazul.png"
@@ -119,42 +124,61 @@ class SecondViewController: UIViewController {
         let fundoView = UIImageView(image: image!)
         fundoView.frame = CGRect(x: 0, y: 0, width: 375, height: 1000)
         
-        let componentes = "Componentes1.png"
+        let componentes = "componentes.png"
         let image2 = UIImage(named: componentes)
         let compoView = UIImageView(image: image2!)
-        compoView.frame = CGRect(x: 28, y: 83, width: 318, height: 472)
+        compoView.frame = CGRect(x: 16, y: 75, width: 343, height: 480)
+        
+        let retangulo = "retangulo.png"
+        let image3 = UIImage(named: retangulo)
+        let retanguloView = UIImageView(image: image3!)
+        retanguloView.frame = CGRect(x: 52, y: 268, width: 0, height: 11)
+        retanguloView.isHidden = true
+        videoTempo = retanguloView
         
         let aranha = "aranha.png"
         let aranhaIm = UIImage(named: aranha)
-        let aranhaButton = UIButton(frame: CGRect(x: 31, y: 344, width: 55, height: 55))
+        let aranhaButton = UIButton(frame: CGRect(x: 35, y: 348, width: 55, height: 55))
         aranhaButton.addTarget(nil, action: #selector(tapAranhaButton), for: .touchUpInside)
         aranhaButton.setImage(aranhaIm, for: .normal)
         butaumA = aranhaButton
         
         let passaro = "passaro.png"
         let passaroIm = UIImage(named: passaro)
-        let passaroButton = UIButton(frame: CGRect(x: 31, y: 421, width: 55, height: 55))
+        let passaroButton = UIButton(frame: CGRect(x: 35, y: 420, width: 55, height: 55))
         passaroButton.addTarget(nil, action: #selector(tapPassaroButton), for: .touchUpInside)
         passaroButton.setImage(passaroIm, for: .normal)
         butaumP = passaroButton
         
         let minhoca = "minhoca.png"
         let minhocaIm = UIImage(named: minhoca)
-        let minhocaButton = UIButton(frame: CGRect(x: 31, y: 498, width: 53, height: 53))
+        let minhocaButton = UIButton(frame: CGRect(x: 35, y: 498, width: 53, height: 53))
         minhocaButton.addTarget(nil, action: #selector(tapMinhocaButton), for: .touchUpInside)
         minhocaButton.setImage(minhocaIm, for: .normal)
         butaumM = minhocaButton
         
+  
         
+        let filePath = Bundle.main.path(forResource: "heartbeat", ofType: "mov")
+        let videoURL = URL.init(fileURLWithPath: filePath!)
+        player = AVPlayer(url: videoURL as URL)
+        
+        playerLayer = AVPlayerLayer(player: player)
+        playerLayer.frame = CGRect(x: 27, y: 114, width: 320, height: 136)
+        playerLayer.videoGravity = .resizeAspectFill
+        player.actionAtItemEnd = .pause
+
         view.addSubview(fundoView)
         view.addSubview(compoView)
         view.addSubview(backButton)
         view.addSubview(checkButton)
         view.addSubview(testeButton)
+        view.addSubview(retanguloView)
         view.addSubview(aranhaButton)
         view.addSubview(passaroButton)
         view.addSubview(minhocaButton)
-        
+        view.layer.addSublayer(playerLayer)
+
         self.view = view
     }
     
@@ -178,19 +202,16 @@ class SecondViewController: UIViewController {
 
     }
     @objc func tapTestButton() {
-        print("play")
-        if let path = Bundle.main.path(forResource: "heartbeat", ofType: "mov"){
-            let video = AVPlayer(url: URL(fileURLWithPath: path))
-            let videoPlayer = AVPlayerViewController()
-            videoPlayer.player = video
-            self.present(videoPlayer, animated: true, completion: {
-                video.play()
-                
-            })
-        }
+      print("play")
+        videoTempo.isHidden = false
+        UIImageView.animate(withDuration: 38, animations: {
+            self.videoTempo.frame = CGRect(x: 52, y: 268, width: 299, height: 11)
+        }, completion: {_ in
+            self.videoTempo.isHidden = true}
+        )
+        player.play()
+        
     }
-    let rotate = CGAffineTransform(rotationAngle: 360)
-    let scale = CGAffineTransform(scaleX: 1.2, y: 1.2)
     
     @objc func tapAranhaButton() {
         print("Apertou aranha")
@@ -212,6 +233,7 @@ class SecondViewController: UIViewController {
     @objc func tapPassaroButton() {
         print("Apertou passaro")
         tocaAsCoisa(som: "somHappy")
+
         UIButton.animate(withDuration: 5, animations: {
                 self.butaumP.frame.origin.x += 205
             }, completion: { (value: Bool) in
@@ -264,7 +286,7 @@ class ThirdViewController: UIViewController {
         let muitoBem = "muitoBem.png"
         let imageMb = UIImage(named: muitoBem)
         let muitoBemView = UIImageView(image: imageMb)
-        muitoBemView.frame = CGRect(x: -11, y: 87, width: 380, height: 50)
+        muitoBemView.frame = CGRect(x: 0, y: 87, width: 370, height: 50)
         
         let button = UIButton(frame: CGRect(x: 14, y: 532, width: 347, height: 88))
         button.addTarget(nil, action: #selector(tapButton), for: .touchUpInside)
@@ -335,7 +357,7 @@ class FourthViewController: UIViewController {
     }
 }
 // Present the view controller in the Live View window
-
+let firstViewController = FirstViewController()
 let secondViewController = SecondViewController()
 secondViewController.modalPresentationStyle = .fullScreen
 let thirdViewController = ThirdViewController()
