@@ -85,6 +85,9 @@ let firstViewController = FirstViewController()
 
 class SecondViewController: UIViewController {
     var certo = false
+    var butaumA =  UIButton(frame: CGRect(x: 31, y: 344, width: 55, height: 55))
+    var butaumP =  UIButton(frame: CGRect(x: 31, y: 344, width: 55, height: 55))
+    var butaumM =  UIButton(frame: CGRect(x: 31, y: 344, width: 55, height: 55))
     override func loadView() {
         let view = UIView()
         view.backgroundColor = .white
@@ -126,18 +129,21 @@ class SecondViewController: UIViewController {
         let aranhaButton = UIButton(frame: CGRect(x: 31, y: 344, width: 55, height: 55))
         aranhaButton.addTarget(nil, action: #selector(tapAranhaButton), for: .touchUpInside)
         aranhaButton.setImage(aranhaIm, for: .normal)
+        butaumA = aranhaButton
         
         let passaro = "passaro.png"
         let passaroIm = UIImage(named: passaro)
         let passaroButton = UIButton(frame: CGRect(x: 31, y: 421, width: 55, height: 55))
         passaroButton.addTarget(nil, action: #selector(tapPassaroButton), for: .touchUpInside)
         passaroButton.setImage(passaroIm, for: .normal)
+        butaumP = passaroButton
         
         let minhoca = "minhoca.png"
         let minhocaIm = UIImage(named: minhoca)
         let minhocaButton = UIButton(frame: CGRect(x: 31, y: 498, width: 53, height: 53))
         minhocaButton.addTarget(nil, action: #selector(tapMinhocaButton), for: .touchUpInside)
         minhocaButton.setImage(minhocaIm, for: .normal)
+        butaumM = minhocaButton
         
         
         view.addSubview(fundoView)
@@ -153,13 +159,16 @@ class SecondViewController: UIViewController {
     }
     
     @objc func tapButton() {
+        //tocaAsCoisa(som: "somFliperama")
         print("Apertou botão da SecondViewController")
         if (certo == true){
             show(thirdViewController, sender: nil)
+            tocaAsCoisa(som: "somSucesso")
         }else{
             show(fourthViewController, sender: nil)
+            tocaAsCoisa(som: "somFail")
         }
-        tocaAsCoisa(som: "somFliperama")
+        
 
     }
     @objc func tapBackButton() {
@@ -180,17 +189,58 @@ class SecondViewController: UIViewController {
             })
         }
     }
+    let rotate = CGAffineTransform(rotationAngle: 360)
+    let scale = CGAffineTransform(scaleX: 1.2, y: 1.2)
+    
     @objc func tapAranhaButton() {
         print("Apertou aranha")
-        tocaAsCoisa(som: "heartbeatSom")
+        tocaAsCoisa(som: "somHeartbeat")
+        UIButton.animate(withDuration: 6, animations: {
+            self.butaumA.frame.origin.x += 205
+        }, completion: { (value: Bool) in
+            self.butaumA.frame.origin.x -= 205
+            UIButton.animate(withDuration: 0.5,
+            animations: {
+                self.butaumA.transform = CGAffineTransform(scaleX: 1.4, y: 1.4)},completion: { _ in
+                         UIButton.animate(withDuration: 0.5) {
+                         self.butaumA.transform = CGAffineTransform.identity
+                        }
+            })
+        })
         certo = true
     }
     @objc func tapPassaroButton() {
         print("Apertou passaro")
+        tocaAsCoisa(som: "somHappy")
+        UIButton.animate(withDuration: 5, animations: {
+                self.butaumP.frame.origin.x += 205
+            }, completion: { (value: Bool) in
+                self.butaumP.frame.origin.x -= 205
+                UIButton.animate(withDuration: 0.5,
+                animations: {
+                    self.butaumP.transform = CGAffineTransform(scaleX: 1.4, y: 1.4)},completion: { _ in
+                             UIButton.animate(withDuration: 0.5) {
+                             self.butaumP.transform = CGAffineTransform.identity
+                            }
+                })
+            })
         certo = false
     }
     @objc func tapMinhocaButton() {
         print("Apertou minhoca")
+        tocaAsCoisa(som: "somJaws")
+        UIButton.animate(withDuration: 5, animations: {
+                 self.butaumM.frame.origin.x += 220
+             }, completion: { (value: Bool) in
+                 self.butaumM.frame.origin.x -= 220
+                 UIButton.animate(withDuration: 0.5,
+                 animations: {
+                     self.butaumM.transform = CGAffineTransform(scaleX: 1.4, y: 1.4)},completion: { _ in
+                              UIButton.animate(withDuration: 0.5) {
+                              self.butaumM.transform = CGAffineTransform.identity
+                             }
+                 })
+             })
         certo = false
     }
 }
@@ -258,8 +308,21 @@ class FourthViewController: UIViewController {
         let ContinuarButtonImage = UIImage(named: ContinuarButtonIm)
         button.setImage(ContinuarButtonImage, for: .normal)
         
+        let piPAULcaErro = "piPAULca_erro.png"
+        let imagePiE = UIImage(named: piPAULcaErro)
+        let piPAULcaViewErro = UIImageView(image: imagePiE!)
+        piPAULcaViewErro.frame = CGRect(x: 0, y: 230, width: 375, height: 328)
+        
+        let porPouco = "porPouco.png"
+        let porPoucoIm = UIImage(named: porPouco)
+        let porPoucoView = UIImageView(image: porPoucoIm)
+        porPoucoView.frame = CGRect(x: 7, y: 80, width: 361, height: 99)
+        
+        
         view.addSubview(fundoView)
         view.addSubview(button)
+        view.addSubview(piPAULcaViewErro)
+        view.addSubview(porPoucoView)
         self.view = view
     }
     
